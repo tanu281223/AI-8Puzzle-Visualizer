@@ -1,0 +1,438 @@
+/*
+ * AI 8-Puzzle Visualizer & Game - Playful & Aesthetic Modern Styling
+ * Course: Artificial Intelligence | Assigned to Tanu (24BCB0061)
+ * Features: Ambient animated aurora background, 4 playful aesthetic themes,
+ * tactile 3D tiles, tile-in-place star badges, combo streak animations, and glassmorphism.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+/* =========================================================================
+ * THEME SYSTEM & CSS VARIABLES
+ * ========================================================================= */
+
+:root, body.theme-cosmic {
+    --bg-main: #0b0f19;
+    --bg-card: rgba(18, 24, 38, 0.75);
+    --border-color: rgba(99, 102, 241, 0.22);
+    --orb-1: #4f46e5; /* Electric Indigo */
+    --orb-2: #06b6d4; /* Vivid Cyan */
+    --orb-3: #d946ef; /* Neon Fuchsia */
+    --primary: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.4);
+    --tile-bg: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+    --tile-border: #6366f1;
+    --tile-edge: #1e1b4b;
+    --tile-text: #ffffff;
+    --tile-hover-bg: linear-gradient(135deg, #3730a3 0%, #4f46e5 100%);
+    --tile-correct-bg: linear-gradient(135deg, #064e3b 0%, #047857 60%, #059669 100%);
+    --tile-correct-border: #34d399;
+    --tile-correct-edge: #064e3b;
+    --board-bg: #070a13;
+    --board-border: rgba(99, 102, 241, 0.35);
+}
+
+body.theme-candy {
+    --bg-main: #140d1e;
+    --bg-card: rgba(36, 22, 51, 0.78);
+    --border-color: rgba(244, 114, 182, 0.25);
+    --orb-1: #f472b6; /* Pastel Pink */
+    --orb-2: #c084fc; /* Pastel Lavender */
+    --orb-3: #38bdf8; /* Pastel Sky */
+    --primary: #ec4899;
+    --primary-glow: rgba(236, 72, 153, 0.4);
+    --tile-bg: linear-gradient(135deg, #4a215c 0%, #702e82 50%, #9d3fac 100%);
+    --tile-border: #e879f9;
+    --tile-edge: #381546;
+    --tile-text: #ffffff;
+    --tile-hover-bg: linear-gradient(135deg, #86198f 0%, #c026d3 100%);
+    --tile-correct-bg: linear-gradient(135deg, #065f46 0%, #0d9488 60%, #14b8a6 100%);
+    --tile-correct-border: #2dd4bf;
+    --tile-correct-edge: #042f2e;
+    --board-bg: #100818;
+    --board-border: rgba(232, 121, 249, 0.4);
+}
+
+body.theme-emerald {
+    --bg-main: #041310;
+    --bg-card: rgba(6, 30, 24, 0.78);
+    --border-color: rgba(52, 211, 153, 0.22);
+    --orb-1: #059669; /* Emerald */
+    --orb-2: #14b8a6; /* Teal */
+    --orb-3: #f59e0b; /* Amber */
+    --primary: #10b981;
+    --primary-glow: rgba(16, 185, 129, 0.4);
+    --tile-bg: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
+    --tile-border: #34d399;
+    --tile-edge: #022c22;
+    --tile-text: #ffffff;
+    --tile-hover-bg: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    --tile-correct-bg: linear-gradient(135deg, #854d0e 0%, #b45309 60%, #d97706 100%);
+    --tile-correct-border: #fbbf24;
+    --tile-correct-edge: #713f12;
+    --board-bg: #020d0b;
+    --board-border: rgba(52, 211, 153, 0.35);
+}
+
+body.theme-sunset {
+    --bg-main: #180b12;
+    --bg-card: rgba(38, 16, 26, 0.78);
+    --border-color: rgba(251, 146, 60, 0.25);
+    --orb-1: #ea580c; /* Coral Orange */
+    --orb-2: #e11d48; /* Crimson Rose */
+    --orb-3: #8b5cf6; /* Violet */
+    --primary: #f97316;
+    --primary-glow: rgba(249, 115, 22, 0.4);
+    --tile-bg: linear-gradient(135deg, #451a03 0%, #7c2d12 50%, #9a3412 100%);
+    --tile-border: #fb923c;
+    --tile-edge: #2e1002;
+    --tile-text: #ffffff;
+    --tile-hover-bg: linear-gradient(135deg, #c2410c 0%, #ea580c 100%);
+    --tile-correct-bg: linear-gradient(135deg, #4c1d95 0%, #6d28d9 60%, #7c3aed 100%);
+    --tile-correct-border: #a78bfa;
+    --tile-correct-edge: #2e1065;
+    --board-bg: #0f050b;
+    --board-border: rgba(251, 146, 60, 0.35);
+}
+
+/* =========================================================================
+ * BASE STYLES & ANIMATED AURORA BACKGROUND
+ * ========================================================================= */
+
+body {
+    background-color: var(--bg-main);
+    color: #f8fafc;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    transition: background-color 0.5s ease;
+}
+
+h1, h2, h3, .font-heading {
+    font-family: 'Outfit', sans-serif;
+}
+
+.ambient-aurora-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    background: var(--bg-main);
+    transition: background 0.6s ease;
+}
+
+.aurora-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.45;
+    will-change: transform;
+    animation: floatOrb 20s infinite alternate ease-in-out;
+    transition: background 0.6s ease;
+}
+
+.aurora-orb-1 {
+    width: 520px;
+    height: 520px;
+    background: var(--orb-1);
+    top: -120px;
+    left: -100px;
+    animation-duration: 22s;
+}
+
+.aurora-orb-2 {
+    width: 480px;
+    height: 480px;
+    background: var(--orb-2);
+    bottom: -100px;
+    right: -80px;
+    animation-duration: 26s;
+    animation-delay: -6s;
+}
+
+.aurora-orb-3 {
+    width: 420px;
+    height: 420px;
+    background: var(--orb-3);
+    top: 35%;
+    left: 38%;
+    animation-duration: 28s;
+    animation-delay: -12s;
+}
+
+@keyframes floatOrb {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(60px, -40px) scale(1.12); }
+    100% { transform: translate(-40px, 50px) scale(0.95); }
+}
+
+/* =========================================================================
+ * GLASSMORPHISM PANELS
+ * ========================================================================= */
+
+.glass-panel {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+/* =========================================================================
+ * 3X3 PUZZLE BOARD & 3D TACTILE TILES
+ * ========================================================================= */
+
+.puzzle-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    width: 290px;
+    height: 290px;
+    padding: 12px;
+    background: var(--board-bg);
+    border-radius: 20px;
+    border: 2px solid var(--board-border);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6), 0 0 24px var(--primary-glow);
+    position: relative;
+    user-select: none;
+    margin: 0 auto;
+    transition: border-color 0.4s ease, background 0.4s ease;
+}
+
+@media (min-width: 640px) {
+    .puzzle-board {
+        width: 330px;
+        height: 330px;
+        gap: 12px;
+        padding: 14px;
+    }
+}
+
+.puzzle-tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 800;
+    border-radius: 14px;
+    background: var(--tile-bg);
+    border: 1px solid var(--tile-border);
+    box-shadow: 0 5px 0 var(--tile-edge), 0 8px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    color: var(--tile-text);
+    cursor: default;
+    transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Tactile Clickable */
+.puzzle-tile.can-move {
+    cursor: pointer;
+}
+
+.puzzle-tile.can-move:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 0 var(--tile-edge), 0 14px 22px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    background: var(--tile-hover-bg);
+}
+
+.puzzle-tile.can-move:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--tile-edge), 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Correct Tile In-Place with Shiny Star */
+.puzzle-tile.tile-correct {
+    background: var(--tile-correct-bg) !important;
+    border-color: var(--tile-correct-border) !important;
+    box-shadow: 0 5px 0 var(--tile-correct-edge), 0 8px 20px rgba(16, 185, 129, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.35) !important;
+}
+
+.puzzle-tile.tile-correct::after {
+    content: '★';
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 11px;
+    color: #fde047;
+    text-shadow: 0 0 6px rgba(250, 204, 21, 0.9);
+    animation: starPop 0.4s ease;
+}
+
+@keyframes starPop {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.4); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Blank Slot (Deep Well Inset) */
+.puzzle-tile.tile-blank {
+    background: rgba(10, 15, 26, 0.4) !important;
+    border: 2px dashed rgba(148, 163, 184, 0.25) !important;
+    box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.7) !important;
+    color: transparent !important;
+    transform: none !important;
+}
+
+/* Moved Pulse */
+.puzzle-tile.tile-moved {
+    animation: tilePulse 0.3s ease;
+    border-color: #60a5fa;
+    box-shadow: 0 0 18px rgba(96, 165, 250, 0.6);
+}
+
+@keyframes tilePulse {
+    0% { transform: scale(0.92); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Distance hint sub-badge */
+.tile-distance-badge {
+    position: absolute;
+    bottom: 4px;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 999px;
+    line-height: 1;
+    pointer-events: none;
+}
+.dist-0 { background: rgba(16, 185, 129, 0.35); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.5); }
+.dist-1 { background: rgba(245, 158, 11, 0.35); color: #fde047; border: 1px solid rgba(245, 158, 11, 0.5); }
+.dist-2 { background: rgba(244, 63, 94, 0.35); color: #fda4af; border: 1px solid rgba(244, 63, 94, 0.5); }
+
+/* GBFS Hint Pulsing Tile */
+.puzzle-tile.hint-tile {
+    animation: hintPulse 0.8s infinite alternate !important;
+    border-color: #f59e0b !important;
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.8) !important;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+}
+
+@keyframes hintPulse {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.08); filter: brightness(1.3); }
+}
+
+/* Shake Animation on Illegal Move */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+.animate-shake {
+    animation: shake 0.3s ease-in-out;
+    border-color: #ef4444 !important;
+}
+
+/* Interactive editable tiles in Modal */
+.interactive-tile {
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.2s;
+}
+
+.interactive-tile:hover {
+    transform: scale(1.05);
+    border-color: #3b82f6;
+}
+
+.interactive-tile.selected {
+    border-color: #10b981;
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+}
+
+/* Mini 3x3 Preview Boards */
+.mini-board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+    width: 90px;
+    height: 90px;
+    padding: 4px;
+    background: #090d16;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.mini-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 4px;
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+.mini-tile.mini-blank {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px dashed rgba(100, 116, 139, 0.4);
+    color: transparent;
+}
+
+/* Frontier Cards */
+.frontier-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.frontier-item:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.12);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
+
+/* Navigation active tab pill */
+.nav-tab.active {
+    background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+/* Confetti Fullscreen Canvas */
+#confettiCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 100;
+}
