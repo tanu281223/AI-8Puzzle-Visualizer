@@ -12,8 +12,8 @@ Features a full playable **Game Mode**, **Human vs AI Race Mode**, **Web Audio S
 - **Student Name:** Tanu
 - **Assigned Algorithm:** Algorithm 6 - Greedy Best First Search / GBFS (Informed Search)
 - **Registration Number:** 24BCB0061
-- **GitHub Repository:** `https://github.com/username/AI-8Puzzle-Visualizer`
-- **Live Demo (GitHub Pages):** `https://username.github.io/AI-8Puzzle-Visualizer`
+- **GitHub Repository:** `https://github.com/tanu281223/AI-8Puzzle-Visualizer`
+- **Live Demo (GitHub Pages):** `https://tanu281223.github.io/AI-8Puzzle-Visualizer`
 
 ---
 
